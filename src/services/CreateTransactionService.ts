@@ -24,6 +24,12 @@ class CreateTransactionService {
     const transactionRepository = getCustomRepository(TransactionRepository);
     const categoryRepository = getRepository(Category);
 
+    const { total } = await transactionRepository.getBalance();
+
+    if (type === 'outcome' && total - value < 0) {
+      throw Error('Insufficient Funds');
+    }
+
     const transaction = transactionRepository.create({
       title,
       value,
