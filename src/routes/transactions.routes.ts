@@ -51,17 +51,7 @@ transactionsRouter.post(
   upload.single('file'),
   async (request, response) => {
     const importTransactions = new ImportTransactionsService();
-    const importedTransactions = await importTransactions.execute(
-      request.file.path,
-    );
-
-    const createTransaction = new CreateTransactionService();
-
-    const transactions = await Promise.all(
-      importedTransactions.map(transaction =>
-        createTransaction.execute(transaction),
-      ),
-    );
+    const transactions = await importTransactions.execute(request.file.path);
 
     return response.json(transactions);
   },
